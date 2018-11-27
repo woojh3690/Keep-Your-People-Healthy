@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KYPH</string>
+    <string name="title_activity_init">hi</string>
+    <string name="main">Main</string>
+    <string name="examine">Examine</string>
+    <string name="foods">Foods</string>
+    <string name="Ingredient">Ingredient</string>
+</resources>
