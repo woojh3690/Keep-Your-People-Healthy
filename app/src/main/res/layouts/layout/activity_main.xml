@@ -1,26 +1,42 @@
-<com.sothree.slidinguppanel.SlidingUpPanelLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top"
-    sothree:umanoPanelHeight="50dp"
-    sothree:umanoShadowHeight="4dp"
-    sothree:umanoParallaxOffset="100dp"
+    android:gravity="bottom"
     sothree:umanoDragView="@+id/dragView"
     sothree:umanoOverlay="true"
+    sothree:umanoPanelHeight="50dp"
+    sothree:umanoParallaxOffset="100dp"
     sothree:umanoScrollableView="@+id/list"
+    sothree:umanoShadowHeight="4dp"
     tools:context="woo.kyph.MainActivity">
 
     <!-- MAIN CONTENT -->
-    <FrameLayout
-        android:id="@+id/main_frame"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
-        android:paddingTop="50dp" />
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/searchText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/main_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="50dp" />
+    </LinearLayout>
 
     <!-- SLIDING LAYOUT -->
     <LinearLayout
@@ -29,20 +45,14 @@
         android:layout_height="wrap_content"
         android:background="#ffffff"
         android:clickable="true"
-        android:focusable="false"
+        android:focusable="true"
         android:orientation="vertical">
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/title"
@@ -52,6 +62,13 @@
                 android:gravity="center"
                 android:textSize="20sp" />
         </LinearLayout>
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
 
         <!--<ScrollView-->
         <!--android:id="@+id/sv"-->

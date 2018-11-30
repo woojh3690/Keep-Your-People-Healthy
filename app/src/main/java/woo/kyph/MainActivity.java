@@ -4,20 +4,25 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import java.util.Arrays;
@@ -41,6 +46,11 @@ public class MainActivity extends AppCompatActivity
     public static final int FOODS = 1;
     public static final int INGREDIENT = 2;
 
+    private int curFm = 3;
+
+    private EditText searchText;
+    private LinearLayout slideLayout;
+
     private final SparseArray<Fragment> fragmentSparseArray;
     {
         fragmentSparseArray = new SparseArray<>();
@@ -56,6 +66,19 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        searchText = findViewById(R.id.searchText);
+        searchText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    searchText.setHint("");
+                } else {
+                    searchText.setHint(getString(R.string.search));
+                    new Rect();
+                }
+            }
+        });
+        slideLayout = findViewById(R.id.dragView);
         setSlideMenu();
         changeFragment(MAIN);
     }
@@ -106,6 +129,8 @@ public class MainActivity extends AppCompatActivity
         if (mLayout != null &&
                 (mLayout.getPanelState() == PanelState.EXPANDED || mLayout.getPanelState() == PanelState.ANCHORED)) {
             mLayout.setPanelState(PanelState.COLLAPSED);
+        } else if (curFm != MAIN) {
+            changeFragment(MAIN);
         } else {
             super.onBackPressed();
         }
@@ -116,7 +141,38 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            } else {
+                Rect outRect = new Rect();
+                slideLayout.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())
+                        && (mLayout.getPanelState() == PanelState.EXPANDED || mLayout.getPanelState() == PanelState.ANCHORED)) {
+                    mLayout.setPanelState(PanelState.COLLAPSED);
+                    Log.i(TAG, "확인");
+                    return false;
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
+    }
+
     public void changeFragment(int index) {
+        if (index == FOODS || index == INGREDIENT) {
+            searchText.setVisibility(View.VISIBLE);
+        } else {
+            searchText.setVisibility(View.GONE);
+        }
         try {
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
@@ -124,6 +180,7 @@ public class MainActivity extends AppCompatActivity
 
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
+            curFm = index;
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
