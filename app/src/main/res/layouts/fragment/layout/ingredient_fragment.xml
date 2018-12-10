@@ -9,6 +9,8 @@
     <ListView
         android:id="@+id/ingredient_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:listSelector="@android:color/transparent"
+        android:divider="@null"/>
 
 </FrameLayout>

@@ -5,10 +5,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Trace;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import kyph.woo.kyph.R;
 import woo.kyph.MainActivity;
@@ -20,7 +24,10 @@ public class FoodsFragment extends Fragment {
 
     private ListView listView;
     private ScrollAdapter scrollAdapter;
-    private SetAdapter setAdapter;
+
+    static boolean setAdapterTaskRunning = false;
+    private boolean lastitemVisibleFlag = false;
+    static boolean next;
 
     public FoodsFragment() {
         // Required empty public constructor
@@ -34,11 +41,28 @@ public class FoodsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this woo.fragment
+        next = true;
         View view =  inflater.inflate(R.layout.foods_fragment, container, false);
         listView = view.findViewById(R.id.foods_listview);
         listView.setAdapter(scrollAdapter);
-        setAdapter.execute();
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag) {
+                    if (next && !setAdapterTaskRunning) {
+                        setAdapterTaskRunning = true;
+                        new SetAdapter().execute(scrollAdapter);
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
+            }
+        });
+
+        new SetAdapter().execute(scrollAdapter);
         return view;
     }
 
@@ -58,7 +82,6 @@ public class FoodsFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
         scrollAdapter = new ScrollAdapter(context, MainActivity.FOODS);
-        setAdapter  = new SetAdapter();
     }
 
     @Override
@@ -71,17 +94,18 @@ public class FoodsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private class SetAdapter extends AsyncTask<Void, Void, String> {
+    static class SetAdapter extends AsyncTask<ScrollAdapter, Void, ScrollAdapter> {
 
         @Override
-        protected String doInBackground(Void... voids) {
-            String limit = scrollAdapter.update();
-            return limit;
+        protected ScrollAdapter doInBackground(ScrollAdapter... scrAdap) {
+            next = scrAdap[0].update();
+            return scrAdap[0];
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            scrollAdapter.notifyDataSetChanged();
+        protected void onPostExecute(ScrollAdapter scrAdap) {
+            scrAdap.notifyDataSetChanged();
+            setAdapterTaskRunning = false;
         }
     }
 }

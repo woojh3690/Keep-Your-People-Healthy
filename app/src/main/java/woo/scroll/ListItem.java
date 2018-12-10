@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import kyph.woo.kyph.R;
 
 public class ListItem extends ConstraintLayout {
@@ -18,6 +20,20 @@ public class ListItem extends ConstraintLayout {
     private ImageView rightImage;
     private TextView rightText;
     private Context context;
+
+    private static final HashMap translation = new HashMap();
+    {
+        translation.put("감자", "potato");
+        translation.put("아보카도", "avocado");
+        translation.put("바나나", "banana");
+        translation.put("귀리", "oat");
+        translation.put("시금치", "spinach");
+        translation.put("비트", "beat");
+        translation.put("연어", "salmon");
+        translation.put("표고버섯", "shiitake_mushrooms");
+        translation.put("양배추", "cabbage");
+        translation.put("양파", "onion");
+    }
 
     public ListItem (Context context) {
         super(context);
@@ -48,7 +64,13 @@ public class ListItem extends ConstraintLayout {
 
     private int getImage(String name) {
         Resources res = getResources();
-        int id = res.getIdentifier("foods_" + name, "drawable", "woo.kyph");
+        int id;
+        if (name.matches("-?\\d+(\\.\\d+)?")) {
+            id = res.getIdentifier("foods_" + name, "drawable", "woo.kyph");
+        } else {
+            String eng_name = (String)translation.get(name);
+            id = res.getIdentifier(eng_name, "drawable", "woo.kyph");
+        }
         return id;
     }
 }
