@@ -6,11 +6,13 @@
     tools:context="woo.fragment.ExamineFragment">
 
     <!-- TODO: Update blank woo.fragment layout -->
-    <TextView
+
+    <ListView
+        android:id="@+id/foods_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="24sp"
-        android:gravity="center"
-        android:text="@string/foods" />
+        android:listSelector="@android:color/transparent"
+        android:divider="@null"/>
+
 
 </FrameLayout>
