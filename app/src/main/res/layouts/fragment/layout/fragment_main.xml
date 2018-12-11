@@ -25,27 +25,30 @@
 
     <Button
         android:id="@+id/button_examine"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/main_button_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@color/colorPrimary"
         android:text="Examine"
         android:textSize="24sp" />
 
     <Button
         android:id="@+id/button_foods"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/main_button_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/main_button_margin"
+        android:background="@color/colorPrimary"
         android:text="Foods"
         android:textSize="24sp" />
 
     <Button
         android:id="@+id/button_ingredient"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/main_button_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/main_button_margin"
+        android:background="@color/colorPrimary"
         android:text="Ingredient"
         android:textSize="24sp" />
 </LinearLayout>
