@@ -22,8 +22,8 @@ public class ListItem extends ConstraintLayout {
     private TextView leftText;
     private ImageView rightImage;
     private TextView rightText;
-    private String leftItem;
-    private String rightItem;
+    private String leftId;
+    private String rightId;
 
     private static HashMap translation = new HashMap();
 
@@ -41,14 +41,14 @@ public class ListItem extends ConstraintLayout {
         leftImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeView(leftItem);
+                changeView(leftId);
             }
         });
 
         rightImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeView(rightItem);
+                changeView(rightId);
             }
         });
 
@@ -70,7 +70,7 @@ public class ListItem extends ConstraintLayout {
     }
 
     public void setLeftImage(String leftImage) {
-        leftItem = leftImage;
+        leftId = leftImage;
         this.leftImage.setImageResource(getImage(leftImage));
     }
 
@@ -79,7 +79,7 @@ public class ListItem extends ConstraintLayout {
     }
 
     public void setRightImage(String rightImage) {
-        rightItem = rightImage;
+        rightId = rightImage;
         this.rightImage.setImageResource(getImage(rightImage));
     }
 
@@ -99,13 +99,13 @@ public class ListItem extends ConstraintLayout {
         return id;
     }
 
-    private void changeView(String item) {
+    private void changeView(String id) {
         if (type == MainActivity.FOODS) {
             Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("item", item);
+            intent.putExtra(RecipeActivity.ID, id);
             context.startActivity(intent);
         } else {
-            ((MainActivity)context).changeFragment(MainActivity.FOOD_FIND, item);
+            ((MainActivity)context).changeFragment(MainActivity.FOOD_FIND, id);
         }
     }
 }

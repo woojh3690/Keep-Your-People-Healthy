@@ -4,6 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecipeActivity">
+    android:paddingStart="@dimen/scroll_view_margin"
+    android:paddingEnd="@dimen/scroll_view_margin"
+    android:background="@color/background"
+    tools:context="woo.kyph.RecipeActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/recipe_image"
+                android:layout_width="@dimen/image_size"
+                android:layout_height="@dimen/image_size"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                tools:src="@tools:sample/avatars" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/efficacy" />
+
+            <TextView
+                android:id="@+id/recipe_text_efficacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="효능_내용" />
+
+            <TextView
+                android:id="@+id/recipe_text_recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="레시피" />
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
