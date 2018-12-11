@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,6 +69,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         searchText = findViewById(R.id.searchText);
+        slideLayout = findViewById(R.id.dragView);
+        setSearchText(); //검색텍스트바 설정
+        setSlideMenu(); //슬라이드 메뉴탭 설정
+        changeFragment(MAIN); //메인화면으로 전환
+    }
+
+    private void setSearchText() {
         searchText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -74,13 +83,26 @@ public class MainActivity extends AppCompatActivity
                     searchText.setHint("");
                 } else {
                     searchText.setHint(getString(R.string.search));
-                    new Rect();
                 }
             }
         });
-        slideLayout = findViewById(R.id.dragView);
-        setSlideMenu();
-        changeFragment(MAIN);
+
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void setSlideMenu() {
