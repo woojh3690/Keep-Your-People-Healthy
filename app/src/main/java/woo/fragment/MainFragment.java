@@ -28,7 +28,7 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
         Button button = view.findViewById(R.id.button_examine);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

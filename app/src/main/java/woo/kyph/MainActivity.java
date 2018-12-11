@@ -6,10 +6,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,15 +39,17 @@ public class MainActivity extends AppCompatActivity
         MainFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "mainActivity";
-    public static final int MAIN = 3;
-    public static final int EXAMINE = 0;
-    public static final int FOODS = 1;
-    public static final int INGREDIENT = 2;
+    public static final int MAIN = 0;
+    public static final int FOOD_FIND = 4;
+    public static final int EXAMINE = 1;
+    public static final int FOODS = 2;
+    public static final int INGREDIENT = 3;
 
     private int curFm = 3;
 
     private EditText searchText;
     private LinearLayout slideLayout;
+    private FragmentManager fm = getFragmentManager();
 
     private final SparseArray<Fragment> fragmentSparseArray;
     {
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                position += 1;
                 if (position == EXAMINE) {
                     changeFragment(position);
                 } else if (position == FOODS){
@@ -159,7 +160,6 @@ public class MainActivity extends AppCompatActivity
                 if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())
                         && (mLayout.getPanelState() == PanelState.EXPANDED || mLayout.getPanelState() == PanelState.ANCHORED)) {
                     mLayout.setPanelState(PanelState.COLLAPSED);
-                    Log.i(TAG, "확인");
                     return false;
                 }
             }
@@ -168,16 +168,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void changeFragment(int index) {
-        if (index == FOODS || index == INGREDIENT) {
+        this.changeFragment(index, null);
+    }
+
+    public void changeFragment(int index, String search) {
+        if (index >= FOODS && index <= FOOD_FIND) {
             searchText.setVisibility(View.VISIBLE);
         } else {
             searchText.setVisibility(View.GONE);
         }
         try {
-            FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.main_frame, fragmentSparseArray.get(index));
-
+            if (index == FOOD_FIND) {
+                ft.replace(R.id.main_frame, FoodsFragment.newInstance(search));
+            } else {
+                ft.replace(R.id.main_frame, fragmentSparseArray.get(index));
+            }
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
             curFm = index;

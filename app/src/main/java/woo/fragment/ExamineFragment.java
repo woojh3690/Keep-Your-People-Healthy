@@ -27,7 +27,7 @@ public class ExamineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this woo.fragment
-        return inflater.inflate(R.layout.examine_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_examine, container, false);
     }
 
     public void onButtonPressed(Uri uri) {

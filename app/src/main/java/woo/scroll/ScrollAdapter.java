@@ -17,13 +17,15 @@ public class ScrollAdapter extends BaseAdapter {
     private int type;
     private Context context;
     private SqlHelper sqlHelper;
+    private String where;
 
     ArrayList<ListItem> items = new ArrayList<>();
 
-    public ScrollAdapter(Context context, int type) {
+    public ScrollAdapter(Context context, int type, String where) {
         this.context  = context;
         this.type = type;
         this.sqlHelper = new SqlHelper(context);
+        this.where = where;
     }
 
     public boolean update() {
@@ -32,16 +34,16 @@ public class ScrollAdapter extends BaseAdapter {
 
         if (type == MainActivity.FOODS) {
             String[] columns = {"num", "food"};
-            data = sqlHelper.getData(columns, null, limit);
+            data = sqlHelper.getData(false, SqlHelper.DATA_TABLE, columns, where, limit);
         } else if (type == MainActivity.INGREDIENT) {
             String[] columns = {"ingredient", "ingredient"};
-            data = sqlHelper.getData(true, columns, null, limit);
+            data = sqlHelper.getData(true, SqlHelper.INGREDIENT_TABLE, columns, where, limit);
         }
         count += interval;
 
         assert data != null;
         for (int i = 0; i < data.size(); i += 2) {
-            ListItem listItem = new ListItem(context);
+            ListItem listItem = new ListItem(context, type);
             String[] left = data.get(i);
             listItem.setLeftImage(left[0]);
             listItem.setLeftText(left[1]);

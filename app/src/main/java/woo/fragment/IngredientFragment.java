@@ -5,13 +5,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import kyph.woo.kyph.R;
 import woo.kyph.MainActivity;
@@ -20,9 +18,9 @@ import woo.scroll.ScrollAdapter;
 public class IngredientFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-
     private ListView listView;
     private ScrollAdapter scrollAdapter;
+    private Context context;
 
     static boolean setAdapterTaskRunning = false;
     private boolean lastitemVisibleFlag = false;
@@ -32,22 +30,34 @@ public class IngredientFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+        this.context = context;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        scrollAdapter = new ScrollAdapter(context, MainActivity.INGREDIENT, null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         next = true;
-        View view = inflater.inflate(R.layout.ingredient_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_ingredient, container, false);
         listView = view.findViewById(R.id.ingredient_listview);
         listView.setAdapter(scrollAdapter);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag) {
-                    Toast.makeText(getActivity(), "호출", Toast.LENGTH_SHORT).show();
                     if (next && !setAdapterTaskRunning) {
                         setAdapterTaskRunning = true;
                         new SetAdapter().execute(scrollAdapter);
@@ -69,18 +79,6 @@ public class IngredientFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-        scrollAdapter = new ScrollAdapter(context, MainActivity.INGREDIENT);
     }
 
     @Override
